@@ -4,6 +4,7 @@ var startButton = document.querySelector("#startButton");
 var questionHeader = document.querySelector("h1");
 var paragraph = document.querySelector("p");
 var list = document.querySelector("ul");
+var main = document.querySelector("main")
 var answerList = [];
 var thisCorrectAnswer = "";
 
@@ -16,15 +17,16 @@ var answers4 = ["Discrete Object Method", "Document Object Model", "Distributed 
 var allAnswers = [answers1, answers2, answers3, answers4];
 var correctAnswers = ["variables", "parentheses", "all of the above", "Document Object Model"];
 var index = 0;
+var userInitials = "";
 
 
 startButton.addEventListener("click", startGame);
 
-function startGame() {
+function startGame(event) {
     countdown();
     paragraph.setAttribute("style", "display: none;");
     startButton.setAttribute("style", "display: none;");
-    renderQuestion();
+    advance(event);
 }
 
 function countdown() {
@@ -32,7 +34,7 @@ function countdown() {
         secondsLeft--;
         secondsDisplayed.textContent = secondsLeft;
 
-        if (secondsLeft <= 0) {
+        if ((secondsLeft <= 0) || (index === questions.length + 1)) {
             clearInterval(timer);
             secondsDisplayed.textContent = 0;
         }
@@ -51,17 +53,25 @@ function renderQuestion() {
             answerOption.setAttribute("style", "cursor: pointer;");
             list.appendChild(answerOption);
         }
-    } else {
-        for (i = 0; i < 4; i++){
-        list.children[i].textContent = answerList[i];
-        list.children[i].setAttribute("style", "cursor: pointer;");
+    } else if (index < questions.length) {
+        for (i = 0; i < 4; i++) {
+            list.children[i].textContent = answerList[i];
+            list.children[i].setAttribute("style", "cursor: pointer;");
         }
     }
 
     index++;
+    console.log(index);
+    if ((index === questions.length) && (secondsLeft != 0)) {
+        list.addEventListener("click", getInitials);
+    } else {
+        list.addEventListener("click", advance);
+    }
+}
 
-    list.addEventListener("click", getAnswer);
-    list.addEventListener("click", renderQuestion);
+function advance(event) {
+    getAnswer(event);
+    renderQuestion();
 }
 
 function getAnswer(event) {
@@ -73,10 +83,10 @@ function getAnswer(event) {
 
         if (selectedAnswer === thisCorrectAnswer) {
             result.textContent = "Correct!"
-            result.setAttribute("style", "color: green;")
+            result.style.color = "green";
         } else {
             result.textContent = "Wrong!"
-            result.setAttribute("style", "color: red;")
+            result.style.color = "red";
             if (secondsLeft >= 15) {
                 secondsLeft = secondsLeft - 15;
             } else {
@@ -84,8 +94,40 @@ function getAnswer(event) {
             }
             secondsDisplayed.textContent = secondsLeft;
         }
-    
+
         list.appendChild(result);
+
     }
 
+}
+
+var input;
+
+function getInitials() {
+    list.setAttribute("style", "display: none;");
+    questionHeader.textContent = "Please enter your initials:";
+    questionHeader.setAttribute("style", "display: visible;");
+    input = document.createElement("input");
+    input.setAttribute("type", "text");
+    main.appendChild(input);
+
+   
+    input.addEventListener("change", displayScore);
+    
+}
+
+function displayScore() {
+    userInitials = input.value;
+    if (userInitials === "") {
+        alert("Please enter your initials to continue.");
+        getInitials();
+    } else {
+        input.setAttribute("style", "display: none;")
+        questionHeader.textContent = "Highscores:";
+        var highscores = document.createElement("ul");
+        main.appendChild(highscores);
+        var newScore = document.createElement("li");
+        newScore.textContent = userInitials + ": " + secondsLeft + " seconds left."
+        highscores.appendChild(newScore);
+    }
 }
