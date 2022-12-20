@@ -28,13 +28,7 @@ Link to deployed application:
 
     https://michael-loeffler.github.io/Code-Quiz/
 
-![Preview of Application and demonstration of features](./assets/images/passwordGeneratorDemo.gif)
-
-![Preview of Character Length Window Prompt](./assets/images/lengthFailPre.PNG)
-
-![Preview of Character Length Fail Window Alert](./assets/images/lengthFailPost.PNG)
-
-![Preview of all four Window Confirm Messages and Fail Window Alert](./assets/images/characterTypeFail.PNG)
+![Preview of application and demonstration of features](./assets/images/codeQuizDemo.gif)
 
 ## Credits
 
